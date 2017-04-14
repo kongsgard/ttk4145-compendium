@@ -1,50 +1,42 @@
-% Tikz!
-%\usepackage{tikz}
-%\usetikzlibrary{shapes.geometric, arrows}
-% Norske bokstaver
+% Norwegian letters
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
-% Mindre marger
+% Smaller margins
 \usepackage[cm]{fullpage}
-% Appendiks
+% Appendix
 \usepackage[titletoc]{appendix}
 \renewcommand\appendixname{}
-% Farger!
+% Colours
 \usepackage[usenames,dvipsnames]{xcolor}
 \newcommand{\titlecolor}{MidnightBlue}
-% Opplisting inni avsnitt
+% Paragraphs and lists
 \usepackage{paralist}
-% Kompakte lister
+% Compact lists
 \usepackage{enumitem}
-% Figurer
+% Figures
 \usepackage{graphicx}
 \renewcommand{\figurename}{Figur}
-% Bedre interaksjon mellom figurer og tokolonne-oppsett
+% Better interaction of floating figures
 \usepackage{float}
 % Lenker
 \usepackage{hyperref}
 % Tokolonne-oppsett
 \usepackage{multicol}
-% Indeks
+% Index
 \usepackage{makeidx}
-% Mikrotypografiske forbedringer
-\usepackage{microtype}
-% SI
-\usepackage{siunitx}
-\usepackage{textcomp}
-% Ikke orddeling
+% No hyphenation
 \usepackage[none]{hyphenat}
 % Tabellformatering
 \usepackage{tabularx}
 \setlength{\extrarowheight}{5pt}
-% Flere tegn
+% More signs
 \usepackage{amssymb}
-% Flere subfigurer
+% More subfigures
 \usepackage{subcaption}
 % Tikz
 \usepackage{tikz}
 \usetikzlibrary{shapes.geometric, arrows, shapes.arrows}
-% Egendefinerte titler
+% Selfdefined title formatting
 \newcommand{\grandtitle}[1]
 {{
 	\color{\titlecolor}
@@ -73,7 +65,7 @@
   \begin{centering}\section*{#1}\end{centering}
   \hrule height 0.5pt \bigskip
 }}
-% Indeksering
+% Indexing
 \renewcommand{\indexname}{Register}
 \newcommand{\ix}[1]{\index{#1}#1}
 \newcommand{\idx}[1]{\index{#1}\emph{#1}}
@@ -96,19 +88,19 @@
    \let\item\@idxitem}%
   {\end{multicols}\if@restonecol\onecolumn\else\clearpage\fi}
 \makeatother
-% Fotnote
+% Footer
 \renewcommand{\footnoterule}{%
   \kern -3pt
   \hrule width \textwidth height 1pt
   \kern 2pt
 }
-% Innholdsfortegnelse
+% Table of contents
 \usepackage{setspace}
 \usepackage{tocloft}
 \setcounter{tocdepth}{1}
 \renewcommand{\contentsname}{Innhold}
 \renewcommand{\cftbeforesecskip}{0pt}
-% Horisontal linje
+% Horizontal line
 \newlength{\seplinewidth}
 \newlength{\seplinesep}
 \setlength{\seplinewidth}{0.5pt}
