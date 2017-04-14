@@ -1,0 +1,33 @@
+\ctitle{Fault model and software fault masking}
+
+\paragraph{This chapter} ...
+
+\sepline
+
+\paragraph{Fault model} The one used in this chapter involves three entities: \textit{processes, messages and storage}.
+
+\paragraph{Unexpected faults}\index{unexpected faults} Faults that are not tolerated by the design. Two categorizations:
+\begin{itemize}[nolistsep,noitemsep]
+  \item \textit{Dense faults}: The algorithms will be \textit{n}-fault tolerant. If there are more than \textit{n} faults within a repair period, the service may be interrupted (in this case the system should be designed to stop).
+  \item \textit{Byzantine faults}: The fault model postulates certain behavior -- for example it may postulate that programs are failfast. Faults in which the system does not conform to the model behavior are called Byzantine.
+\end{itemize}
+
+\paragraph{Underlying progression}\index{process}
+\begin{itemize}
+  \item \textit{Failfast}: They either execute the next step, or they fail and reset to the null state.
+  \item \textit{Available}: Failfast + repairability
+  \item \textit{Reliable}: Continuous operation
+\end{itemize}
+
+\paragraph{Checkpoint-Restart}\index{Checkpoint-Restart} Write state to storage after each acceptance test, but before each event. This approach can be somewhat slow (hours/days).
+
+\paragraph{Process pairs}\index{process pairs} OS generates a backup process for each new primary process. The primary sends \textit{I'm Alive} messages to the backup on a regular basis.
+
+The backup can take over in three different ways:
+\begin{itemize}
+  \item \textit{Checkpoint-restart.} The primary records its state on a duplexed storage module. At takeover, the backup starts by reading these duplexed storage pages. (quick repair)
+  \item \textit{Checkpoint message.} The primary sends its state changes as messages to the backup. At takeover, the backup gets its current state from the most recent message. (basic pairs must checkpoint)
+  \item \textit{Persistent.} The backup restarts in the null state and lets the transaction mechanism clean up (undo) any recent uncommitted state changes. (simple)
+\end{itemize}
+
+% TODO: Transactions, persistent processes

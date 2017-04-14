@@ -1,0 +1,130 @@
+% Tikz!
+%\usepackage{tikz}
+%\usetikzlibrary{shapes.geometric, arrows}
+% Norske bokstaver
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+% Mindre marger
+\usepackage[cm]{fullpage}
+% Appendiks
+\usepackage[titletoc]{appendix}
+\renewcommand\appendixname{}
+% Farger!
+\usepackage[usenames,dvipsnames]{xcolor}
+\newcommand{\titlecolor}{MidnightBlue}
+% Opplisting inni avsnitt
+\usepackage{paralist}
+% Kompakte lister
+\usepackage{enumitem}
+% Figurer
+\usepackage{graphicx}
+\renewcommand{\figurename}{Figur}
+% Bedre interaksjon mellom figurer og tokolonne-oppsett
+\usepackage{float}
+% Lenker
+\usepackage{hyperref}
+% Tokolonne-oppsett
+\usepackage{multicol}
+% Indeks
+\usepackage{makeidx}
+% Mikrotypografiske forbedringer
+\usepackage{microtype}
+% SI
+\usepackage{siunitx}
+\usepackage{textcomp}
+% Ikke orddeling
+\usepackage[none]{hyphenat}
+% Tabellformatering
+\usepackage{tabularx}
+\setlength{\extrarowheight}{5pt}
+% Flere tegn
+\usepackage{amssymb}
+% Flere subfigurer
+\usepackage{subcaption}
+% Tikz
+\usepackage{tikz}
+\usetikzlibrary{shapes.geometric, arrows, shapes.arrows}
+% Egendefinerte titler
+\newcommand{\grandtitle}[1]
+{{
+	\color{\titlecolor}
+	\begin{centering}
+	\resizebox{1\hsize}{!}
+	{
+		#1
+	}
+	\bigskip
+	\end{centering}
+}}
+\newcommand{\ctitle}[1]
+{{
+	\color{\titlecolor}
+	\begin{centering}\section{#1}\end{centering}
+	\hrule height 0.5pt \bigskip
+}}
+\newcommand{\cstitle}[1]
+{{
+	\color{\titlecolor}
+	\begin{centering}\subsection{#1}\end{centering}
+}}
+\newcommand{\atitle}[1]
+{{
+  \color{\titlecolor}
+  \begin{centering}\section*{#1}\end{centering}
+  \hrule height 0.5pt \bigskip
+}}
+% Indeksering
+\renewcommand{\indexname}{Register}
+\newcommand{\ix}[1]{\index{#1}#1}
+\newcommand{\idx}[1]{\index{#1}\emph{#1}}
+\makeatletter
+\renewenvironment{theindex}
+  {\if@twocolumn
+      \@restonecolfalse
+   \else
+      \@restonecoltrue
+   \fi
+   \setlength{\columnseprule}{0pt}
+   \setlength{\columnsep}{35pt}
+   \begin{multicols}{3}[\section*{\indexname}]
+   \markboth{\MakeUppercase\indexname}%
+            {\MakeUppercase\indexname}%
+   \thispagestyle{plain}
+   \setlength{\parindent}{0pt}
+   \setlength{\parskip}{0pt plus 0.3pt}
+   \relax
+   \let\item\@idxitem}%
+  {\end{multicols}\if@restonecol\onecolumn\else\clearpage\fi}
+\makeatother
+% Fotnote
+\renewcommand{\footnoterule}{%
+  \kern -3pt
+  \hrule width \textwidth height 1pt
+  \kern 2pt
+}
+% Innholdsfortegnelse
+\usepackage{setspace}
+\usepackage{tocloft}
+\setcounter{tocdepth}{1}
+\renewcommand{\contentsname}{Innhold}
+\renewcommand{\cftbeforesecskip}{0pt}
+% Horisontal linje
+\newlength{\seplinewidth}
+\newlength{\seplinesep}
+\setlength{\seplinewidth}{0.5pt}
+\setlength{\seplinesep}{2mm}
+\colorlet{sepline}{\titlecolor}
+\newcommand*{\sepline}{%
+  \par
+  \vspace{\dimexpr\seplinesep+.5\parskip}%
+  \cleaders\vbox{%
+    \begingroup % because of color
+      \color{sepline}%
+      \hrule width\linewidth height\seplinewidth
+    \endgroup
+  }\vskip\seplinewidth
+  \vspace{\dimexpr\seplinesep-.5\parskip}%
+}
+
+\newlist{todolist}{itemize}{2}
+\setlist[todolist]{label=$\square$}
