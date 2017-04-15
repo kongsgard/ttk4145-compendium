@@ -18,8 +18,6 @@
 \renewcommand{\figurename}{Figur}
 % Better interaction of floating figures
 \usepackage{float}
-% Lenker
-\usepackage{hyperref}
 % Tokolonne-oppsett
 \usepackage{multicol}
 % Index
@@ -36,6 +34,15 @@
 % Tikz
 \usepackage{tikz}
 \usetikzlibrary{shapes.geometric, arrows, shapes.arrows, backgrounds}
+% Ceil function
+\usepackage{mathtools}
+\DeclarePairedDelimiter{\ceil}{\lceil}{\rceil}
+% Lenker
+\usepackage{hyperref}
+\usepackage{cleveref}
+
+
+
 % Selfdefined title formatting
 \newcommand{\grandtitle}[1]
 {{
