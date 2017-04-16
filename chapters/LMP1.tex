@@ -1,0 +1,144 @@
+\ctitle{Transaction Fundamentals}
+
+\paragraph{This chapter} is based on Ch. 1 in the book Java Transaction Processing (LMP).
+
+\sepline
+
+\paragraph{Atomic operation}\index{atomic operation} An operation that is indivisible (it is not possible to decompose it into smaller operations), eg. a money transfer between two bank accounts.
+
+\paragraph{Transaction}\index{transaction}\index{atomic transaction} Refers to the term \textit{atomic transaction}, which provides an "all-or-nothing" property to work that is conducted within its scope. An atomic transaction has the same properties as an atomic action plus the added feature that if a failure happens, the components are returned to their natural state instead of being left possibly inconsistent as in an atomic action.
+
+\paragraph{Controlling a transaction} A few definitions:
+\begin{itemize}
+  \item \textit{Commit:} When all parts of the transaction commits, the transaction finishes and all its actions are made permanent.
+  \item \textit{Rollback:} An abortion of the transaction. All work done by the transaction is reverted.
+\end{itemize}
+
+\paragraph{ACID properties}\index{ACID properties} Properties of an atomic action:
+\begin{itemize}[nolistsep,noitemsep]
+  \item \textit{Atomicity.} The transaction completes successfully (commits) or if it fails (aborts) all of its effects are undone (rolled back).
+  \item \textit{Consistency.} Transactions produce consistent results and preserve the internal consistency of the data it acts on.
+  \item \textit{Isolation.} Intermediate states produced while a transaction is executing are not visible to others. Furthermore, transactions appear to execute serially, even if they are actually executed concurrently.
+  \item \textit{Durability.} The effects of a committed transaction are never lost.
+\end{itemize}
+
+\paragraph{Termination}\index{termination} A transaction can be terminated in two ways: \textit{committed} or \textit{aborted} (rolled back). When a transaction is committed, all changes made within it are made durable (forced onto stable storage). When a transaction is aborted, all of the changes are undone.
+
+\paragraph{Coordinator}\index{coordinator} Responsible for governing the outcome of the transaction. It can be implemented as a separate service or may be co-located with the user for improved performance. It communicates with enlisted participants to inform them of the desired termination requirements.
+
+\paragraph{Transaction manager factory}\index{transaction manager factory} Responsible for managing coordinators for many transactions.
+
+\paragraph{Two-phase commit}\index{two-phase commit} This protocol is used to ensure consensus between participating members of the transaction (ie. ensure it has an atomic outcome).
+
+In phase 1 the coordinator communicates with all the action participants to determine whether they will commit or abort. An abort reply, or no reply, from any participant acts as a veto, causing the entire action to abort. If the transactions commits, then phase 2 is entered and the coordinator forces the participants to carry out the decision. Each participant making a commit response to the coordinator in phase 1 is blocked until they have received the coordinator's phase 2 message.
+
+Note that the two-phase commit protocol is not client-server based. It simply talks about a coordinator and participants, and makes no assumption about where they are located.
+
+% TODO: insert two-phase commit figure
+
+\paragraph{Interference free / Serializable}\index{interference free}\index{serializable} If there are variables that are not shared between programs, some aspects of the programs can be executed concurrently. A partly concurrent execution order is termed serializable if it produces an equivalent result as doing it in serial order. If a program possess this property it is said to be atomic with respect to concurrency.
+
+\paragraph{Concurrency control mechanisms}\index{concurrency control mechanisms} Ensures serializability.
+
+\begin{itemize}%[nolistsep,noitemsep]
+  \item \textit{Two-phase concurrency control:}\index{concurrency control!two-phase} All operations on an object is of type "read" or "write". Many computations can hold a "read-lock", which is associated with an object by a computation before reading it. However, if someone wants to change (insert/modify/delete) the object, this requires a "write-lock". This can not be obtained if any of the other operations hold either a read or write lock on that object. This is to make sure that no one changes something others are using in their operations. If you have obtained a write-lock, this will block all other requests for read and write until you release the lock. All computations must follow a two-phase locking policy.
+
+  In phase 1, the growing phase, locks are acquired, but not released. In phase 2, the shrinking phase, locks are released but can't be acquired. To avoid the cascade roll back problem (see under), all locks are released simultaneosly in the shrinking phase.
+
+  \item \textit{Pessimistic concurrency control:}\index{concurrency control!pessimistic} When a resource is accessed, a lock is obtained on it. The lock will remain held on that resource for the duration of the transaction. Disadvantages with this style:
+  \begin{itemize}[nolistsep,noitemsep]
+    \item Deadlocks
+    \item Concurrency may be limited by the granularity of the locks
+    \item The overhead of acquiring and maintaining concurrency control information in an environment where conflict or data sharing is not high.
+  \end{itemize}
+
+  \item \textit{Optimistic concurrency control:}\index{concurrency control!optimistic} Locks are only acquired at the end of the transaction when it is about to terminate. When updating a resource, the operation needs to check if this conflicts with updates that may have occurred in the interim, using timestamps. Most transaction systems that offer optimistic concurrency control will roll back if a conflict is detected, which may result in a lot of work being lost.
+
+  \item \textit{Type-specific concurrency control:}\index{concurrency control!type-specific} Concurrent read/write or write/write operations are permitted on an object from different transactions provided these operations can be shown to be non-interfering. Object-oriented systems are well suited to this approach, since semantic knowledge about the operations of objects can be exploited to control permissible concurrency within objects.
+
+  \item \textit{Deadlock detection and prevention:} A transaction is \textit{blocked}\index{block} if it cannot acquire a lock on a resource it waits for to be released. In some systems, it is possible for transactions to wait for each other -- the system is \textit{deadlocked}\index{deadlock}.
+
+  The only way to resolve a deadlock is for at least one of the transactions to release its locks that are blocking another transaction (it must roll back). Techniques for deadlock detection:
+  \begin{itemize}[nolistsep,noitemsep]
+    \item \textit{Timeout-based:} A transaction waits a specified period of time, then rolls back assuming there is a deadlock.
+    \item \textit{Graph-based:} Tracks waiting transaction dependencies by constructing a waits-for graph: nodes are waiting transactions and edges are waiting situations. Guaranteed to detect all deadlocks, but may be costly to execute in a distributed environment.
+  \end{itemize}
+\end{itemize}
+
+\paragraph{Two-phase commit optimizations}\index{two-phase commit optimizations} There are several variants to the standard two-phase commit:
+\begin{itemize}[nolistsep,noitemsep]
+  \item \textit{Presumed abort:} If during system recovery from failure no logged evidence for commit of some transaction is found by the recovery procedure, then it assumes that the transaction has been aborted, and acts accordingly. This means that it does not matter if aborts are logged at all, and such logging can be saved under this assumption.
+  \item \textit{One-phase:} If there is only one participant involved in the transaction, there is implicit consensus on whether to commit or not and the coordinator need not drive it through the prepare phase.
+  \item \textit{Read-only:}  A participant may indicate to the coordinator if it is responsible for a service that did not do any work during the course of the transaction, and can be left out of the second phase.
+  \item \textit{Last resource commit:} It is possible for a single resource that is one-phase aware (no prepare, only commit or roll-back), to be enlisted in a transaction with two-phase commit aware resources. The coordinator executes the prepare phase on only the latter, and if the decision is to commit, then the one-phase aware resource is informed about this.
+\end{itemize}
+
+\paragraph{Heuristic transactions}\index{transaction!heuristic}
+
+\textit{Heuristic outcome:} The case in which the coordinator informs the participant that the outcome and the decision are contrary. (May happen when blocking occurs in the two-phase commit protocol (where it is used to ensure atomicity). To break the blocking, participants that are past the prepare phase are allowed to make decisions as to whether commit or rollback.) It has a corresponding \textit{heuristic decision}.
+
+There are two levels of heuristic interaction:
+\begin{itemize}
+  \item \textit{Participant-to-coordinator:} If a participant makes an autonomous decision, it must assume that it caused an heuristic and remember the choice. At this point the participant is in a \textit{heuristic state}.
+  \item \textit{Coordinator-to-application:} If the choice is different from the coordinator, then a heuristic outcome must be reported to the application. The transaction will still be marked as committed of rolled back, but it will also be in a heuristic state.
+\end{itemize}
+
+\hskip-0.5cm
+\begin{tabularx}{\linewidth}{p{1.5cm} X}
+	Outcome & Description \\
+	\hline
+	Heuristic rollback & The commit operation failed because some or all of the participants unilaterally rolled back the transaction. \\
+  Heuristic commit & An attempted rollback operation failed because all of the participants unilaterally committed. One situation where this might happen is if the coordinator is able to successfully prepare the transaction, but then decides to roll it back because its transaction log could not be updated. While the coordinator is making its decision, the participants decides to commit. \\
+  Heuristic mixed & Some participants commited, while others were rolled back.\\
+  Heuristic hazard & The disposition of some of the updates is unknown. For those which are known, they have either all been committed or all rolled back.\\
+\end{tabularx}
+
+%https://access.redhat.com/documentation/en-US/JBoss_Enterprise_Application_Platform/5/html/Transactions_Development_Guide/ch17s08.html
+
+\paragraph{Transaction log}\index{transaction log} Registration of the participants and where they have reached in the protocol. After the coordinator's decision has been conducted, the participant log can be deleted and informed to the coordinator.
+
+% \paragraph{Types of transactions}
+% Nested transactions - Independent top-level transactions - Concurrent transactions - Glued transactions
+\paragraph{Nested transactions}{transaction!nested} Transactions that are contained within the resulting transaction. The enclosing transaction is referred to as a \textit{parent} of a nested (or \textit{child}) transaction $\rightarrow$ a hierarchical structure (with the root referred to as the \textit{top-level transaction}).
+
+The effect of a nested transaction is provisional upon the commit/rollback of its enclosing transaction (the effects will be recovered if the enclosing transaction aborts).
+
+Subtransactions are useful for two reasons:
+\begin{itemize}[nolistsep,noitemsep]
+  \item \textit{Fault isolation:} If the subtransaction rolls back then this does not require the enclosing transaction to roll back.
+  \item \textit{Modularity:} If there is already a transaction associated with a call when a new transaction is begun, then the transaction will be nested within it. If the object's methods are invoked without a client transaction, then the object's transaction will be top-level, otherwise they will be nested within the scope of the client's transactions.
+\end{itemize}
+
+Because nested transactions do not make any state changes durable until the enclosing top-level transaction commits, there is no requirement for failure recovery mechanisms for them.
+
+%\paragraph{Distributed transactions}\index{transaction!distributed}
+\paragraph{Interposition}\index{interposition} The technique of using proxy (or subordinate) coordinators. Each machine that imports a transaction context may create a subordinate coordinator that enrolls with the imported coordinator as though it was a participant.
+
+When and why interpositions occurs:
+\begin{itemize}[nolistsep,noitemsep]
+  \item \textit{Performance:} If a number of participants reside on the same node, or are located physically close, can then improve performance for a remote coordinator to send a single message to a subcoordinator that is co-located with those participants and for that subcoordinator to disseminate the message locally, rather than send the same message to each participants.
+  \item \textit{Security and trust:} A coordinator may not trust indirect participants and vice versa, that makes direct registration impossible.
+  \item \textit{Connectivity:} Some participants may not have direct connectivity with a specific coordinator, requiring a level of indirection.
+  \item \textit{Separation of concerns:} Many domains and services may simply not want to export (possibly sensitive) information about their implementations to the outside world.
+\end{itemize}
+
+% TODO: The cascade roll back problem, synchronization, failure recovery, trust implications, types of transactions
+
+%\cstitle{8 design patterns}
+%% Where is this covered in the supplementary material?
+%% Or is it only described in the lecture notes?
+%\paragraph{Locking}\index{locking} ...
+%
+%\paragraph{Two-Phase Commit}\index{two-phase commit} ...
+%
+%\paragraph{Transaction Manager}\index{transaction manager} ...
+%
+%\paragraph{Resource Manager}\index{resource manager} ...
+%
+%\paragraph{Log}\index{log} ...
+%
+%\paragraph{Checkpoints}\index{checkpoints} ...
+%
+%\paragraph{Log Manager}\index{log manager} ...
+%
+%\paragraph{Lock Manager}\index{lock manager} ...
