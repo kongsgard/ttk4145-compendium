@@ -1,0 +1,92 @@
+\ctitle{Concurrency \& Parallelism}
+
+This chapter is based on (well, more or less equal to) the solution to exercise 1.
+
+\sepline
+
+\paragraph{Concurrency vs. parallelism}\index{concurrency}\index{parallelism} "Concurrency is the composition of independently executing processes, while parallelism is the simultaneous execution of (possibly related) computations. Concurrency is about dealing with lots of things at once. Parallelism is about doing lots of things at once."
+
+\paragraph{Reasons for concurrency}
+\begin{itemize}[nolistsep,noitemsep]
+	\item The need to model that happen "simulatenously".
+	\item The need to exploit multicore hardware.
+	\item The need to utilize hardware efficiently (even a single core).
+\end{itemize}
+
+\paragraph{Degree of difficulty to use concurrency}
+Creating concurrent programs is easier if the system consists of multiple (somewhat) independent parts, like
+\begin{itemize}[nolistsep,noitemsep]
+	\item Two periodic functions with different periods.
+	\item Handling multiple network requests.
+	\item Polling different independent hardware, and generating separate events for each.
+	\item Things that are "embarrassingly parallel".
+\end{itemize}
+
+Creating concurrent programs is harder if the concurrent parts have to interact, as we need some way to share data safely -- communication and/or synchronization:
+\begin{itemize}
+	\item The $i=i+1$ problem demonstrates that strange things may happen if we don't share data safely.
+	\item All threads share the same processor and memory (for common CPU architectures, anyway), so this also creates a form of interaction: Running one thread means we're not running another. This is a problem for real-time (ie. timing-sensitive) applications.
+\end{itemize}
+
+\paragraph{Different kinds of concurrent execution}
+\begin{itemize}
+	\item \textit{Process}
+		\begin{itemize}[nolistsep,noitemsep]
+			\item An executing program (as opposed to just the code itself)
+			\begin{itemize}[nolistsep,noitemsep]
+				\item Executable code
+				\item One or more threads
+				\item An address space -- the OS and hardware enforces that we cannot access the memory of one process from another
+			\end{itemize}
+		\end{itemize}
+	\item \textit{Thread}
+		\begin{itemize}[nolistsep,noitemsep]
+			\item A "unit of execution"
+			\begin{itemize}[nolistsep,noitemsep]
+				\item Has its own stack
+				\item Scheduled by the OS
+				\item Contains data structures for saving the current state of execution (the "context"), so its execution can be paused and resumed
+			\end{itemize}
+			\item Share memory with the same process
+			\begin{itemize}[nolistsep,noitemsep]
+				\item Some languages/extensions (such as Go/D) offer "Thread-local storage" of the heap, such that also the heap is not shared
+			\end{itemize}
+		\end{itemize}
+	\item \textit{Green thread}
+		\begin{itemize}[nolistsep,noitemsep]
+			\item Managed \& (preemptively) scheduled by the runtime (ie. not OS-managed)
+				\begin{itemize}[nolistsep,noitemsep]
+					\item A scheduler is part of the core library of that language
+					\item Often mapped N:M over several threads
+				\end{itemize}
+			\item May or may not share memory
+		\end{itemize}
+	\item \textit{Co-routine}
+		\begin{itemize}[nolistsep,noitemsep]
+			\item Cooperatively (ie. manually, non-preemptively) scheduled by the user/programmer. No runtime, not OS-managed
+			\begin{itemize}[nolistsep,noitemsep]
+				\item All co-routines must call "yield"/"reschedule" (or its equivalent), else other co-routines will not run (hence the need to be "cooperative")
+				\item Sometimes mapped N:M over several threads, but usually just multiplexed over a single thread
+			\end{itemize}
+			\item Usually share memory
+			\item May not need to save/restore the execution context, saving significant management overhead
+		\end{itemize}
+\end{itemize}
+
+\paragraph{Thread spawning functions}
+\begin{itemize}[nolistsep,noitemsep]
+	\item \verb|pthread_create| (C++/POSIX) $\rightarrow$ Creates an OS-managed thread
+	\item \verb|threading.Thread| (Python) $\rightarrow$ Creates an OS-managed thread
+	\item \verb|go| (Go) $\rightarrow$ Creates a co-routine
+\end{itemize}
+
+% --- %
+
+%\paragraph{Testing} Is not good enough.
+%\begin{itemize}[nolistsep,noitemsep]
+%	\item Can only show \textit{presence} of errors.
+%	\item Cannot find errors in the spec.
+%	\item Is realistic testing possible?
+%	\item Cannot find race conditions.
+%	\item The world interface.
+%\end{itemize}
