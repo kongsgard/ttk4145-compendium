@@ -18,7 +18,7 @@ This chapter is based on Ch. 2 in Real-Time Systems and Programming Languages 4E
 \paragraph{Types of fault}
 \begin{itemize}[nolistsep,noitemsep]
   \item \textit{Transient faults:} Occur at a particular time, remain in the system for a period, then disappear afterwards. An example of this is radioactivity.
-  \item \textit{Permanent faults:} A fault that persists in the system until it is  xed. All software faults are permanent faults.
+  \item \textit{Permanent faults:} A fault that persists in the system until it is fixed. All software faults are permanent faults.
   \item \textit{Intermittent faults:} A special case of transient faults that occur repeatedly. Overheating is an example.
 \end{itemize}
 
@@ -36,7 +36,7 @@ This chapter is based on Ch. 2 in Real-Time Systems and Programming Languages 4E
 \begin{itemize}[nolistsep,noitemsep]
   \item \textit{Full fault tolerance:} The system continues to operate in the presence of faults, albeit for a limited period, with no significant loss of functionality or performance.
   \item \textit{Graceful degradation:} The system continues to operate in the presence of errors, accepting a partial degradation of functionality or performance during recovery or repair.
-  \item \textit{Fail safe:} The system maintains its integrity while accepting a temporary its operation.
+  \item \textit{Fail safe:} The system maintains its integrity while accepting a temporary halt in its operation.
 \end{itemize}
 
 \paragraph{Redundancy}\index{redundancy} All techniques for achieving fault tolerance rely on extra elements (redundancy) introduced into the system to detect and recover from faults. Can be implemented in both software and hardware.
@@ -50,7 +50,7 @@ Distinguish between static and dynamice redundancy for hardware:
 
 \paragraph{N-version programming}\index{N-version programming} Defined as the independent generation of $N$ (where $N \geq 2$) functionally equivalent programs from the same initial specification. The programs execute concurrently without interaction, and the results (compared by a driver process) should be identical. However, if they do not produce the same result the driver might choose the most common result, ask the processes to compute it again, or simply terminate the faulty process.
 
-To achieve diversity, different programming languages and different development environments could be used. Alternatively, if the same language is used, different compilers and support environments should be employed. ($\rightarrow$ $N$-version programming is the software equivalent of static redundancy.)
+To achieve diversity, different programming languages and different development environments could be used. Alternatively, if the same language is used, different compilers and support environments should be employed. ($N$-version programming is the software equivalent of static redundancy.)
 
 Downsides to this solution:
 \begin{itemize}[nolistsep,noitemsep]
@@ -80,9 +80,9 @@ Downsides to this solution:
 
 \paragraph{Error recovery}\index{error recovery} Once an error situation has been detected and the damage assessed, error recovery procedures must be initiated.
 
-\textit{Forward error recovery}\index{error recovery!forward} Attempts to continue from an erroneous state by making selective corrections to the system state. Although it is efficient, it is system specific and depends on accurate predictions of the location and cause of errors.
+\textit{Forward error recovery:}\index{error recovery!forward} Attempts to continue from an erroneous state by making selective corrections to the system state. Although it is efficient, it is system specific and depends on accurate predictions of the location and cause of errors.
 
-\textit{Backward error recovery}\index{error recovery!backward} Relies on restoring the system to a safe state (recovery point) previous to that in which the error occurred. Straightforward if no threads, but gets complicated with more threads. A big advantage: Does not rely on finding the location or cause of fault. A huge disadvantage: It is difficult to undo eg. a missile launch...
+\textit{Backward error recovery:}\index{error recovery!backward} Relies on restoring the system to a safe state (recovery point) previous to that in which the error occurred. Straightforward if no threads, but gets complicated with more threads. A big advantage: Does not rely on finding the location or cause of fault. A huge disadvantage: It is difficult to undo eg. a missile launch...
 
 \paragraph{Fault treatment} Two stages: Fault location and system repair.
 
