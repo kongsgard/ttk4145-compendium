@@ -1,7 +1,51 @@
-\ctitle{Atomic actions, concurrent tasks and reliability}
+\ctitle{Atomic Actions}
 
 This chapter is based on Ch. 7 in Real-Time Systems and Programming Languages 4E (BW).
 
 \sepline
 
 \paragraph{Atomic actions}\index{atomic actions} The activity of a component is said to be atomic if there are no interactions between the activity and the system for the duration of the action.
+
+\paragraph{Nested atomic actions}\index{atomic actions!nested} An atomic action, even though viewed as indivisible, can be composed by internal atomic actions.
+
+\paragraph{Two-phase atomic actions}\index{atomic actions!two-phase} For efficiency and increased concurrency, it is advantageous if tasks will wait as long as possible before requiring resources, and freeing them as soon as possible. This could however make it possible for other tasks to detect a change in state before the original task is done performing the atomic action.
+
+To avoid this, atomic actions are split into two separate phases, a 'growing' phase where only acquisitions can be made, and a 'shrinking' phase where resources can be released while no new acquisitions can be made. This way, other tasks will always see a consistent system state.
+
+\paragraph{Atomic transactions}\index{atomic transactions} Has all the properties of an atomic action plus the added feature that its execution is allowed to either succeed or fail.
+
+If an atomic action fails, the system may be left in an inconsistent state. If an atomic transaction fails, the system will return to the state prior to the execution.
+
+There are two distinct properties of atomic transactions:
+\begin{itemize}[nolistsep,noitemsep]
+  \item \textit{Failure atomicity:} The transaction must complete successfully or have no effect.
+  \item \textit{Synchronizations atomicity:} The transaction must be indivisible so that no other transaction can observe its execution.
+\end{itemize}
+
+Even though transactions provide error detection, they are not suitable for fault-tolerant systems. This is because they provide no recovery mechanism in case of errors, and will not allow any recovery procedures to be run.
+
+
+\paragraph{Requirements for atomic actions}\index{atomic actions!requirements} For implementation of atomic actions in a real-time system, it is necessary with a well-defined set of requirements which must be fulfilled.
+\begin{itemize}
+  \item \textit{Well-defined boundaries:} Each atomic action should have a start, and end and a side boundary. A start boundary is the locations in the task where the action is initiated; the end is the location where the action will end in the task. The side boundary is the separation of the tasks involved in an action from the rest of the system.
+  \item \textit{Indivisibility:} Atomic actions must not allow any exchange of information between the tasks inside and outside the action. Additionally, there are no synchronization at the start of atomic actions, but there is an implied synchronization at the end; tasks are not allowed to leave the atomic action until all tasks are willing and able to leave.
+  \item \textit{Nesting:} Atomic actions may be nested as long as they do not overlap with other atomic actions.
+  \item \textit{Concurrency:} It should be possible to execute different atomic actions concurrently.
+\end{itemize}
+
+\paragraph{Asynchronous notification} The key to implementing error handling is the asynchronous messages, and most programming languages have some feature allowing asynchronous messages to be sent. There are mainly two principles for this: Resumption and termination.
+
+\textit{Resumption model:} Behaves like a software interrupt. A task contains an event handler which will handle prede ned events. When the task is interrupted, the event handler is executed, and when it is finished, the task will continue execution from the point where it was interrupted.
+
+\textit{Termination model:} Each task specifies a domain in which it will accept an asynchronous signal. If the task is in the defined domain and receives an asynchronous signal, it will terminate the domain (\textit{asynchronous transfer of control}\index{asynchronous transfer of control}, ATC. If a task is outside the defined domain, the ATC will be queued or ignored. When the ATC is finished, the control is returned to the calling task at a different location than from where it was called.
+
+Main reasons for using asynchronous notifications: (enables a task to respond quickly)
+\begin{itemize}
+  \item \textit{Error recovery:} When errors occur it can mean that the system states are no longer valid, that processes may never finish or a timing error may have occurred. There is no longer a point of waiting for a process to finish, and the best solution is to respond immediately.
+  \item \textit{Mode changes:} A real-time system often has several modes of operation. When sudden changes in modes happen, we want the system to respond immediately -- for example when a transition to an emergency state occurs.
+  \item \textit{Scheduling using partial/imprecise computations:} Many algorithms calculating specific results operates by giving more accurate results for each iteration. The task must be interrupted to stop further refinement of the result.
+  \item \textit{User interrupts:} Whenever a system receives interrupts from a user, for example when an error occur, the response must be immediate.
+\end{itemize}
+
+% TODO: Recoverable atomic actions
+% mechanisms for asynchronous notification in C/POSIX, ADA and Java
