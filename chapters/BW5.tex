@@ -1,0 +1,53 @@
+\ctitle{Shared Variable Synchronization}
+
+This chapter is based on Ch. 5 in Real-Time Systems and Programming Languages 4E (BW).
+
+\sepline
+
+\paragraph{Inter-task communication} Usually based upon either \textit{shared variables} or \textit{message passing}.
+
+\paragraph{Critical section}\index{critical section} A sequence of statements that must appear to be executed indivisibly.
+
+\paragraph{Mutual exclusion}\index{mutual exclusion} The synchronization required to protect a critical section.
+
+\paragraph{Busy-wait}\index{busy-wait} To signal a condition, a task sets the value of a flag; to wait for this condition, another task checks this flag and proceeds only when the appropriate value is read. If the condition is not yet set, this task must loop round and recheck the flag.
+
+\paragraph{Livelock}\index{livelock} An error condition where tasks get stuck in their busy-wait loops and are unable to make progress.
+
+\paragraph{Data race condition}\index{race condition} A data race condition is a fault in the design of the interactions between two or more tasks whereby the result is unexpected and critically dependent on the sequence or timing of accesses to shared data.
+
+\paragraph{Semaphore}\index{semaphore} A non-negative integer variable that, apart from initialization, can only be acted upon by two procedures -- \verb|wait| and \verb|signal|. It is imperative that the implementation of these methods are atomic, ie. two tasks executing wait at the same time will not interfere with each other. The two methods works as follows:
+\begin{itemize}[nolistsep,noitemsep]
+  \item \verb|wait(S)| -- If the value of the semaphore, \verb|S|, is greater than zero the decrement its value by one; otherwise delay the task until \verb|S| is greater than zero (and then decrement its value).
+  \item \verb|signal(S)| -- Increment the value of the semaphore, \verb|S|, by one.
+\end{itemize}
+
+Benefits of using semaphores:
+\begin{itemize}[nolistsep,noitemsep]
+  \item Simplifies the protocols for synchronization.
+  \item Removes the need for busy-wait loops.
+\end{itemize}
+
+With the semaphore, we can implement mutual exclusion of two tasks as the following:
+\begin{lstlisting}
+  mutex : semaphore; // initially 1
+  (*\bfseries task*) P1;
+    (*\bfseries loop*)
+    (*\bfseries wait*)(mutex);
+    <critical section>
+    (*\bfseries signal*)(mutex);
+  (*\bfseries task*) P2;
+    <same as P1>
+\end{lstlisting}
+
+It seems like the \verb|wait| procedure needs to perform some sort of busy waiting and wait for a \verb|signal| from some other process. This is where the RTSS (run-time support system) comes in. The RTSS should keep tabs on which tasks are waiting and remove them from the processor. Eventually, if the program is correct (for example, no deadlocks), some other task will call signal and the RTSS will let the task will continue.
+
+\paragraph{Indefinite postponement}\index{indefinite postponement} (Also called \textit{lockout}\index{lockout} or \textit{starvation}\index{starvation}) When a task is not given access to a needed resource in  nite time.
+
+\paragraph{Liveness}\index{liveness} A description of a task that is free from livelocks, deadlocks and starvation.
+
+%\paragraph{Monitor}\index{monitor}
+
+%\paragraph{Protected object}\index{protected object} (Ada)
+
+% TODO: CCRs, synchronization mechanisms in C/POSIX, Ada and Java

@@ -24,7 +24,6 @@ There are two distinct properties of atomic transactions:
 
 Even though transactions provide error detection, they are not suitable for fault-tolerant systems. This is because they provide no recovery mechanism in case of errors, and will not allow any recovery procedures to be run.
 
-
 \paragraph{Requirements for atomic actions}\index{atomic actions!requirements} For implementation of atomic actions in a real-time system, it is necessary with a well-defined set of requirements which must be fulfilled.
 \begin{itemize}
   \item \textit{Well-defined boundaries:} Each atomic action should have a start, and end and a side boundary. A start boundary is the locations in the task where the action is initiated; the end is the location where the action will end in the task. The side boundary is the separation of the tasks involved in an action from the rest of the system.
