@@ -5,6 +5,8 @@ This chapter is based on Ch. 7 in Real-Time Systems and Programming Languages 4E
 \sepline
 
 \paragraph{Atomic actions}\index{atomic actions} The activity of a component is said to be atomic if there are no interactions between the activity and the system for the duration of the action.
+% Only used when the other error modes are not applicable
+% ^Ask about this later
 
 \paragraph{Nested atomic actions}\index{atomic actions!nested} An atomic action, even though viewed as indivisible, can be composed by internal atomic actions.
 
@@ -48,3 +50,17 @@ Main reasons for using asynchronous notifications: (enables a task to respond qu
 
 % TODO: Recoverable atomic actions
 % mechanisms for asynchronous notification in C/POSIX, ADA and Java
+
+% C: possible to kill the thread, reverse malloc (memory allocation), and unlock the semaphores the thread posessed
+% setjump / longjump - a function returns to another place than where it was called from
+
+% Java: asynchronous notifications do not work well (very complicated, refer to the book)
+
+% ADA: select
+%   --- (if this case, do not perform main functionality)
+%   ---
+%   ---
+%   delay 0.5
+% then abort
+%   ---
+%   main functionality

@@ -1,6 +1,6 @@
 \ctitle{Shared Variable Synchronization}
 
-This chapter is based on Ch. 5 in Real-Time Systems and Programming Languages 4E (BW).
+This chapter is based on Ch. 5 in Real-Time Systems and Programming Languages 4E (BW). Based on the concepts presented in that chapter, go through a few of the cases to in The Little Book of Semaphores to get the right mindset.
 
 \sepline
 
@@ -29,6 +29,7 @@ Benefits of using semaphores:
 \end{itemize}
 
 With the semaphore, we can implement mutual exclusion of two tasks as the following:
+%
 \begin{lstlisting}
   mutex : semaphore; // initially 1
   (*\bfseries task*) P1;
@@ -42,12 +43,31 @@ With the semaphore, we can implement mutual exclusion of two tasks as the follow
 
 It seems like the \verb|wait| procedure needs to perform some sort of busy waiting and wait for a \verb|signal| from some other process. This is where the RTSS (run-time support system) comes in. The RTSS should keep tabs on which tasks are waiting and remove them from the processor. Eventually, if the program is correct (for example, no deadlocks), some other task will call signal and the RTSS will let the task will continue.
 
-\paragraph{Indefinite postponement}\index{indefinite postponement} (Also called \textit{lockout}\index{lockout} or \textit{starvation}\index{starvation}) When a task is not given access to a needed resource in  nite time.
+\paragraph{Indefinite postponement}\index{indefinite postponement} (Also called \textit{lockout}\index{lockout} or \textit{starvation}\index{starvation}) When a task is not given access to a needed resource in finite time.
 
 \paragraph{Liveness}\index{liveness} A description of a task that is free from livelocks, deadlocks and starvation.
 
 %\paragraph{Monitor}\index{monitor}
 
 %\paragraph{Protected object}\index{protected object} (Ada)
+
+\paragraph{Synchronization in Java} A Java method may be synchronized, which guarantees that at most one thread can execute the method at a time. Other threads wishing access, are forced to wait until the currently executing thread completes. Thus
+%
+\begin{lstlisting}
+  void synchronized update() { ... }
+\end{lstlisting}
+%
+can safely be used to update an object, even if multiple threads are active.
+
+There is also a \verb|synchronized| statement in Java that forces threads to execute a block of code sequentially.
+
+\textit{Synchronization Primitives}:
+The following operations are provided to allow threads to safely interact:
+\begin{itemize}[nolistsep,noitemsep]
+  \item \verb|wait()| -- Sleep until awakened
+  \item\verb|wait(n)| -- Sleep until awakened, or until $n$ milliseconds pass
+  \item\verb|notify()| -- Wake up one sleeping thread
+  \item \verb|notifyAll()| -- Wake up all sleeping threads
+\end{itemize}
 
 % TODO: CCRs, synchronization mechanisms in C/POSIX, Ada and Java

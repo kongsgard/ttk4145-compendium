@@ -4,7 +4,7 @@ This chapter is based on Ch. 2 in Real-Time Systems and Programming Languages 4E
 
 \sepline
 
-\paragraph{Reliability}\index{reliability} A measure of the success with which the system conforms to some autoritative specification of its behaviour.
+\paragraph{Reliability}\index{reliability} A measure of the success with which the system conforms to some authoritative specification of its behaviour.
 
 \paragraph{Failure vs Fault vs Error} A few definitions:
 \begin{itemize}
@@ -41,7 +41,7 @@ This chapter is based on Ch. 2 in Real-Time Systems and Programming Languages 4E
 
 \paragraph{Redundancy}\index{redundancy} All techniques for achieving fault tolerance rely on extra elements (redundancy) introduced into the system to detect and recover from faults. Can be implemented in both software and hardware.
 
-Distinguish between static and dynamice redundancy for hardware:
+Distinguish between static and dynamic redundancy for hardware:
 \begin{itemize}[nolistsep,noitemsep]
   \item \textit{Static:}\index{redundancy!static} Redundant components are used inside a system (or subsystem) to hide the effects of faults. (error masking)
   \item \textit{Dynamic:}\index{redundancy!dynamic} The redundancy supplied inside a component which indicates explicitly or implicitly that the output is in error. (error detection)
@@ -61,7 +61,7 @@ Downsides to this solution:
 
 \paragraph{Dynamic redundancy}\index{redundancy!dynamic} The redundant components only come into action when an error has been detected. Has four stages presented in the following four paragraphs.
 
-\paragraph{Error detection} Two classes of error detection techniques can be identified.
+\paragraph{Error detection} Two classes of error detection techniques can be identified. You should know this list by heart!
 \begin{itemize}[nolistsep,noitemsep]
   \item Environmental detection
   \item Application detection. Since the recovery system is not continually running, there needs to be some way to detect a fault. There are many triggers that could be used.
