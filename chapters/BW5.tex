@@ -41,7 +41,7 @@ With the semaphore, we can implement mutual exclusion of two tasks as the follow
     <same as P1>
 \end{lstlisting}
 
-It seems like the \verb|wait| procedure needs to perform some sort of busy waiting and wait for a \verb|signal| from some other process. This is where the RTSS (run-time support system) comes in. The RTSS should keep tabs on which tasks are waiting and remove them from the processor. Eventually, if the program is correct (for example, no deadlocks), some other task will call signal and the RTSS will let the task will continue.
+It seems like the \verb|wait| procedure needs to perform some sort of busy waiting and wait for a \verb|signal| from some other process. This is where the RTSS (run-time support system) comes in. The RTSS should keep tabs on which tasks are waiting and remove them from the processor. Eventually, if the program is correct (for example, no deadlocks), some other task will call signal and the RTSS will let the task continue.
 
 \paragraph{Indefinite postponement}\index{indefinite postponement} (Also called \textit{lockout}\index{lockout} or \textit{starvation}\index{starvation}) When a task is not given access to a needed resource in finite time.
 
@@ -66,8 +66,15 @@ The following operations are provided to allow threads to safely interact:
 \begin{itemize}[nolistsep,noitemsep]
   \item \verb|wait()| -- Sleep until awakened
   \item\verb|wait(n)| -- Sleep until awakened, or until $n$ milliseconds pass
-  \item\verb|notify()| -- Wake up one sleeping thread
+  \item\verb|notify()| -- Wake up one sleeping thread (the first thread that called \verb|wait()|)
   \item \verb|notifyAll()| -- Wake up all sleeping threads
+\end{itemize}
+
+\paragraph{Synchronization in Ada} A protected object is a module, a collection of functions, procedures and entries along with a set of variables.
+\begin{itemize}[nolistsep,noitemsep]
+  \item Functions are read-only, and can therefore be called concurrently by many tasks, but not concurrently with procedures and entries.
+  \item Procedures may make changes to the state of the object, and will therefore run under mutual exclusion with other tasks.
+  \item Entries: The important thing is that these are protected by guards -- boolean tests -- so that if the test fails, the entry will not be callable -- the caller will block waiting for the guard to become true. These tests can only be formulated using the object's private variables.
 \end{itemize}
 
 % TODO: CCRs, synchronization mechanisms in C/POSIX, Ada and Java
