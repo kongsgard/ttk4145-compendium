@@ -43,6 +43,27 @@ With the semaphore, we can implement mutual exclusion of two tasks as the follow
 
 It seems like the \verb|wait| procedure needs to perform some sort of busy waiting and wait for a \verb|signal| from some other process. This is where the RTSS (run-time support system) comes in. The RTSS should keep tabs on which tasks are waiting and remove them from the processor. Eventually, if the program is correct (for example, no deadlocks), some other task will call signal and the RTSS will let the task continue.
 
+\paragraph{Deadlock}\index{deadlock} Entails a set of tasks being in a state from which it
+is impossible for any of them to proceed.
+
+Necessary conditions that must hold if deadlock is to occur:
+%
+\begin{itemize}[nolistsep,noitemsep]
+  \item \textit{Mutual exclusion} -- only one task can use a resource at once.
+  \item \textit{Hold \& wait} -- there must exist tasks which are holding resources while waiting for others.
+  \item \textit{No preemption} -- a resource can only be released voluntarily by a task.
+  \item \textit{Circular wait} -- a circular chain of tasks must exists such that each task holds resources which are being requested by the next task in the chain.
+\end{itemize}
+
+\noindent Deadlock prevention:
+%
+\begin{itemize}[nolistsep,noitemsep]
+  \item Optimistic concurrency control.
+  \item Allocate all resources at once.
+  \item Preemption.
+  \item Global allocation order.
+\end{itemize}
+
 \paragraph{Indefinite postponement}\index{indefinite postponement} (Also called \textit{lockout}\index{lockout} or \textit{starvation}\index{starvation}) When a task is not given access to a needed resource in finite time.
 
 \paragraph{Liveness}\index{liveness} A description of a task that is free from livelocks, deadlocks and starvation.
