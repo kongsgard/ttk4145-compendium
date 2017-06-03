@@ -43,7 +43,7 @@ Note that the two-phase commit protocol is not client-server based. It simply ta
 \begin{itemize}%[nolistsep,noitemsep]
   \item \textit{Two-phase concurrency control:}\index{concurrency control!two-phase} All operations on an object is of type "read" or "write". Many computations can hold a "read-lock", which is associated with an object by a computation before reading it. However, if someone wants to change (insert/modify/delete) the object, this requires a "write-lock". This can not be obtained if any of the other operations hold either a read or write lock on that object. This is to make sure that no one changes something others are using in their operations. If you have obtained a write-lock, this will block all other requests for read and write until you release the lock. All computations must follow a two-phase locking policy.
 
-  In phase 1, the growing phase, locks are acquired, but not released. In phase 2, the shrinking phase, locks are released but can't be acquired. To avoid the cascade roll back problem (see under), all locks are released simultaneosly in the shrinking phase.
+  In phase 1, the growing phase, locks are acquired, but not released. In phase 2, the shrinking phase, locks are released but can't be acquired. To avoid the cascade roll back problem (equivalent to the domino effect), all locks are released simultaneosly in the shrinking phase.
 
   \item \textit{Pessimistic concurrency control:}\index{concurrency control!pessimistic} When a resource is accessed, a lock is obtained on it. The lock will remain held on that resource for the duration of the transaction. Disadvantages with this style:
   \begin{itemize}[nolistsep,noitemsep]
@@ -78,9 +78,9 @@ Note that the two-phase commit protocol is not client-server based. It simply ta
 \textit{Heuristic outcome:} The case in which the coordinator informs the participant that the outcome and the decision are contrary. (May happen when blocking occurs in the two-phase commit protocol (where it is used to ensure atomicity). To break the blocking, participants that are past the prepare phase are allowed to make decisions as to whether commit or rollback.) It has a corresponding \textit{heuristic decision}.
 
 There are two levels of heuristic interaction:
-\begin{itemize}
+\begin{itemize}[nolistsep,noitemsep]
   \item \textit{Participant-to-coordinator:} If a participant makes an autonomous decision, it must assume that it caused an heuristic and remember the choice. At this point the participant is in a \textit{heuristic state}.
-  \item \textit{Coordinator-to-application:} If the choice is different from the coordinator, then a heuristic outcome must be reported to the application. The transaction will still be marked as committed of rolled back, but it will also be in a heuristic state.
+  \item \textit{Coordinator-to-application:} If the choice is different from the coordinator, then a heuristic outcome must be reported to the application. The transaction will still be marked as committed or rolled back, but it will also be in a heuristic state.
 \end{itemize}
 
 \hskip-0.5cm
@@ -89,7 +89,7 @@ There are two levels of heuristic interaction:
 	\hline
 	Heuristic rollback & The commit operation failed because some or all of the participants unilaterally rolled back the transaction. \\
   Heuristic commit & An attempted rollback operation failed because all of the participants unilaterally committed. One situation where this might happen is if the coordinator is able to successfully prepare the transaction, but then decides to roll it back because its transaction log could not be updated. While the coordinator is making its decision, the participants decides to commit. \\
-  Heuristic mixed & Some participants commited, while others were rolled back.\\
+  Heuristic mixed & Some participants committed, while others were rolled back.\\
   Heuristic hazard & The disposition of some of the updates is unknown. For those which are known, they have either all been committed or all rolled back.\\
 \end{tabularx}
 
@@ -99,7 +99,7 @@ There are two levels of heuristic interaction:
 
 % \paragraph{Types of transactions}
 % Nested transactions - Independent top-level transactions - Concurrent transactions - Glued transactions
-\paragraph{Nested transactions}{transaction!nested} Transactions that are contained within the resulting transaction. The enclosing transaction is referred to as a \textit{parent} of a nested (or \textit{child}) transaction $\rightarrow$ a hierarchical structure (with the root referred to as the \textit{top-level transaction}).
+\paragraph{Nested transactions}\index{transaction!nested} Transactions that are contained within the resulting transaction. The enclosing transaction is referred to as a \textit{parent} of a nested (or \textit{child}) transaction $\rightarrow$ a hierarchical structure (with the root referred to as the \textit{top-level transaction}).
 
 The effect of a nested transaction is provisional upon the commit/rollback of its enclosing transaction (the effects will be recovered if the enclosing transaction aborts).
 

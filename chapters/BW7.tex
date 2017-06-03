@@ -28,7 +28,7 @@ Even though transactions provide error detection, they are not suitable for faul
 
 \paragraph{Requirements for atomic actions}\index{atomic actions!requirements} For implementation of atomic actions in a real-time system, it is necessary with a well-defined set of requirements which must be fulfilled.
 \begin{itemize}
-  \item \textit{Well-defined boundaries:} Each atomic action should have a start, and end and a side boundary. A start boundary is the locations in the task where the action is initiated; the end is the location where the action will end in the task. The side boundary is the separation of the tasks involved in an action from the rest of the system.
+  \item \textit{Well-defined boundaries:} Each atomic action should have a start, an end, and a side boundary. A start boundary is the locations in the task where the action is initiated; the end is the location where the action will end in the task. The side boundary is the separation of the tasks involved in an action from the rest of the system.
   \item \textit{Indivisibility:} Atomic actions must not allow any exchange of information between the tasks inside and outside the action. Additionally, there are no synchronization at the start of atomic actions, but there is an implied synchronization at the end; tasks are not allowed to leave the atomic action until all tasks are willing and able to leave.
   \item \textit{Nesting:} Atomic actions may be nested as long as they do not overlap with other atomic actions.
   \item \textit{Concurrency:} It should be possible to execute different atomic actions concurrently.
@@ -36,9 +36,9 @@ Even though transactions provide error detection, they are not suitable for faul
 
 \paragraph{Asynchronous notification} The key to implementing error handling is the asynchronous messages, and most programming languages have some feature allowing asynchronous messages to be sent. There are mainly two principles for this: Resumption and termination.
 
-\textit{Resumption model:} Behaves like a software interrupt. A task contains an event handler which will handle prede ned events. When the task is interrupted, the event handler is executed, and when it is finished, the task will continue execution from the point where it was interrupted.
+\textit{Resumption model:} Behaves like a software interrupt. A task contains an event handler which will handle predefined events. When the task is interrupted, the event handler is executed, and when it is finished, the task will continue execution from the point where it was interrupted.
 
-\textit{Termination model:} Each task specifies a domain in which it will accept an asynchronous signal. If the task is in the defined domain and receives an asynchronous signal, it will terminate the domain (\textit{asynchronous transfer of control}\index{asynchronous transfer of control}, ATC. If a task is outside the defined domain, the ATC will be queued or ignored. When the ATC is finished, the control is returned to the calling task at a different location than from where it was called.
+\textit{Termination model:} Each task specifies a domain in which it will accept an asynchronous signal. If the task is in the defined domain and receives an asynchronous signal, it will terminate the domain (\textit{asynchronous transfer of control}\index{asynchronous transfer of control}, ATC). If a task is outside the defined domain, the ATC will be queued or ignored. When the ATC is finished, the control is returned to the calling task at a different location than from where it was called.
 
 Main reasons for using asynchronous notifications: (enables a task to respond quickly)
 \begin{itemize}

@@ -92,7 +92,7 @@ Recursive test. Start with the highest-priority task (which will have response t
 \paragraph{Priority inheritance}\index{priority inheritance} If a task $p$ is suspended waiting for task $q$ to undertake som computation then the priority of $q$ becomes equal to the priority of $p$ (if it was lower to start with). Does NOT prevent deadlocks.
 
 \paragraph{Priority ceiling}\index{priority ceiling} When this kind of protocol is used...
-\begin{itemize}
+\begin{itemize}[nolistsep,noitemsep]
   \item A high-priority task can be blocked at most once during its execution by lower-priority tasks
   \item Deadlocks are prevented
   \item Transitive blocking is prevented
@@ -102,7 +102,7 @@ Recursive test. Start with the highest-priority task (which will have response t
 The protocol ensures that if a resources is locked, by task $a$ say, and could lead to the blocking of a higher-priority task $b$, then no other resources that could block $b$ is allowed to be locked by any task other than $a$. A task can therefore be delayed by not only attempting to lock a previously locked resource, but also when the lock could lead to multiple blocking on higher-priority tasks.
 
 \textit{Original ceiling priority protocol (OCPP)}:
-\begin{itemize}
+\begin{itemize}[nolistsep,noitemsep]
   \item Each task has a static default priority.
   \item Each resource has a static ceiling value (the maximum priority of the tasks that use it).
   \item Tasks have dynamic priority (its own static priority or any (higher) priorities inherited from blocking higher-priority tasks).
@@ -111,7 +111,7 @@ The protocol ensures that if a resources is locked, by task $a$ say, and could l
 
 \textit{Immediate ceiling priority protocol (ICPP)}:
 % The same three first points as for OCPP?
-Instead of waiting until it actually blocks a higher priority task, ICPP increases the priority of a task as soon as in locks a resource. ICPP will not start executing until all its needed resources are free, since unavailable resouces it needs indicates that a task of higher priority is running.
+Instead of waiting until it actually blocks a higher priority task, ICPP increases the priority of a task as soon as it locks a resource. ICPP will not start executing until all its needed resources are free, since unavailable resouces it needs indicates that a task of higher priority is running.
 
 Ensures mutual exclusion: If a task under (eg.) ICPP has access to a resource it will have the highest possible priority for that resource, and thus no other task demanding this resource will run.
 
