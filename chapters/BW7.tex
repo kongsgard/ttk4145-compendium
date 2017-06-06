@@ -60,14 +60,6 @@ Typical program setup:
     -- main functionality
 \end{lstlisting}
 
-Synchronization primitives in ADA:
-\begin{itemize}[nolistsep,noitemsep]
-  \item \textit{Protected module.} A protected object is a module, a collection of functions, procedures and entries along with a set of variables.
-  \item \textit{Functions} are read-only, and can therefore be called concurrently by many tasks, but not concurrently with procedures and entries.
-  \item \textit{Procedures} may make changes to the state of the object, and will therefore run under mutual exclusion with other tasks.
-  \item \textit{Entries.} The important thing is that these are protected by guards -- boolean tests -- so that if the test fails, the entry will not be callable -- the caller will block waiting for the guard to become true. These tests can only be formulated using the object's private variables.
-\end{itemize}
-
 % TODO: Recoverable atomic actions
 % mechanisms for asynchronous notification in C/POSIX, ADA and Java
 
