@@ -66,15 +66,17 @@ Downsides to this solution:
   \item Environmental detection
   \item Application detection. Since the recovery system is not continually running, there needs to be some way to detect a fault. There are many triggers that could be used.
   \begin{itemize}[nolistsep,noitemsep]
-    \item Replication checks --
-    \item Timing checks --
-    \item Reversal checks --
-    \item Coding checks --
-    \item Reasonableness checks --
-    \item Structural checks --
-    \item Dynamic reasonableness checks --
+    \item \textit{Replication checks} -- N-version programming
+    \item \textit{Timing checks} -- watchdog timer, deadline checks
+    \item \textit{Reversal checks} -- $a = \sqrt{n} \Rightarrow a = n^2$
+    \item \textit{Coding checks} -- add extra data to prove correctness: checksum
+    \item \textit{Reasonableness checks} -- assertions, for instance range specification in Ada
+    \item \textit{Structural checks} -- check integrity of data objects
+    \item \textit{Dynamic reasonableness checks} -- check current output with regard to the previous. Is the result reasonable?
   \end{itemize}
 \end{itemize}
+
+All these checks are examples of what one can test for when making acceptance tests.
 
 \paragraph{Damage confinement and assessment} Concerned with structuring the system as to minimize the damage caused by a faulty component (also known as firewalling). Two techniques: modular decomposition and atomic actions.
 
